@@ -2,7 +2,7 @@
 </h1>
 
 <p align="center">
-<a href="https://github.com/DAMO-NLP-SG/DiGIT/raw/main/assets/NeurIPS_2024.pdf"><img src='https://img.shields.io/badge/Paper-PDF-red'></a>
+<a href="https://arxiv.org/abs/2410.12490"><img src='https://img.shields.io/badge/Arxiv-2410.12490-AD1C18.svg?logo=arXiv'></a>
 </p>
 
 <p align="center">
