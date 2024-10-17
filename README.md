@@ -152,12 +152,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you find our project useful, hope you can star our repo and cite our work as follows. 
 
 ```bibtex
-@inproceedings{
-digit,
-title={Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective},
-author={Yongxin Zhu, Bocheng Li, Hang Zhang, Xin Li, Linli Xu, Lidong Bing},
-booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
-year={2024},
-url={https://openreview.net/forum?id=waQ5X4qc3W}
+@misc{zhu2024stabilizelatentspaceimage,
+      title={Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective}, 
+      author={Yongxin Zhu and Bocheng Li and Hang Zhang and Xin Li and Linli Xu and Lidong Bing},
+      year={2024},
+      eprint={2410.12490},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2410.12490}, 
 }
 ``
