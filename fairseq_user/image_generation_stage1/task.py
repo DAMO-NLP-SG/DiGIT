@@ -82,7 +82,6 @@ class ImagePretrainingStage1Task(FairseqTask):
             split=split,
             input_size=cfg.input_size,
             augmentation=cfg.augmentation,
-            dataset_type=cfg.dataset_type,
             num_shards=cfg.num_shards,
             shard_id=cfg.shard_id,
             tgt_dict=self.tgt_dict,

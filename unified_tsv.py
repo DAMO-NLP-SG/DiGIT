@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil
 
 def main(args):
-    with open(args.result_path / f"generate-{args.subset}.txt", "w") as fw:
+    with open(args.result_path / f"{args.subset}.txt", "w") as fw:
         for i in range(args.num_shards):
             print(f"shard {i}")
             with open(args.result_path / f"{args.subset}_shard_{i}" / f"generate-{args.subset}.txt", "r") as fp:

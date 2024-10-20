@@ -85,7 +85,6 @@ class ImagePretrainingTask(FairseqTask):
                 root=data_path if cfg.multi_data is None else cfg.multi_data,
                 split=split,
                 input_size=cfg.input_size,
-                local_cache_path=cfg.local_cache_path,
                 augmentation=cfg.augmentation,
                 dataset_type=cfg.dataset_type,
                 num_shards=cfg.num_shards,

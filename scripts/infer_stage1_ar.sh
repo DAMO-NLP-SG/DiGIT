@@ -2,8 +2,8 @@
 ROOT=PATH_TO_YOUR_WORKSPACE
 export TORCH_HOME=$ROOT
 DATA_ROOT=$ROOT/dataset/ILSVRC2012
-MODEL_DIR=$ROOT/DiGIT/outputs/dino_base_stage1/checkpoints
-RESULTS_PATH=$ROOT/DiGIT/outputs/dino_base_stage1/results
+MODEL_DIR=$ROOT/DiGIT/outputs/base_8k_stage1/checkpoints
+RESULTS_PATH=$ROOT/DiGIT/outputs/base_8k_stage1/results
 GEN_SUBSET=val
 
 mkdir -p $MODEL_DIR
@@ -25,9 +25,11 @@ CUDA_VISIBLE_DEVICES=${devices[$i]} fairseq-generate $DATA_ROOT --user-dir ./fai
 done
 wait
 
-python unified_tsv.py --num-shards $NUM_SHARDS --result-path ${RESULTS_PATH} --subset $GEN_SUBSET
-echo done
+rm ${RESULTS_PATH}/generate-${GEN_SUBSET}.codecs
 
-grep "^D\-" ${RESULTS_PATH}/generate-${GEN_SUBSET}.txt | \
+for ((i=0; i<$NUM_SHARDS; i++)) do
+grep "^D\-" ${RESULTS_PATH}/${GEN_SUBSET}_shard_${i}/generate-${GEN_SUBSET}.txt | \
 sed 's/^D-//ig' | sort -nk1 | cut -f3 \
-    > ${RESULTS_PATH}/generate-${GEN_SUBSET}.codecs
+    >> ${RESULTS_PATH}/generate-${GEN_SUBSET}.codecs
+rm -r ${RESULTS_PATH}/${GEN_SUBSET}_shard_${i}
+done

@@ -1,11 +1,11 @@
 #!/bin/bash
 ROOT=PATH_TO_YOUR_WORKSPACE
 export TORCH_HOME=$ROOT
-DATA_ROOT=$ROOT/DiGIT/outputs/dino_base_stage1_cls/results
-MODEL_DIR=$ROOT/DiGIT/outputs/dino_base_stage2/checkpoints
-RESULTS_PATH=$ROOT/DiGIT/outputs/dino_base_stage2/results
-GEN_SUBSET=generate-val-cls
-export IMG_SAVE_DIR=${RESULTS_PATH}/gen-${GEN_SUBSET}
+DATA_ROOT=$ROOT/DiGIT/outputs/base_8k_stage1/results
+MODEL_DIR=$ROOT/DiGIT/outputs/base_8k_stage2_400epoch/checkpoints
+RESULTS_PATH=$ROOT/DiGIT/outputs/base_8k_stage2_400epoch/results
+GEN_SUBSET=generate-val
+export IMG_SAVE_DIR=${RESULTS_PATH}/${GEN_SUBSET}
 
 mkdir -p $MODEL_DIR
 rm -r $IMG_SAVE_DIR
@@ -29,8 +29,8 @@ wait
 
 python unified_tsv.py --num-shards $NUM_SHARDS --result-path ${RESULTS_PATH} --subset $GEN_SUBSET
 
-CUDA_VISIBLE_DEVICES=${devices[0]} python fairseq_user/eval_fid.py --results-path $IMG_SAVE_DIR 
-
-grep "^D\-" ${RESULTS_PATH}/generate-${GEN_SUBSET}.txt | \
+grep "^D\-" ${RESULTS_PATH}/${GEN_SUBSET}.txt | \
 sed 's/^D-//ig' | sort -nk1 | cut -f3 \
-    > ${RESULTS_PATH}/generate-${GEN_SUBSET}.codecs
+    > ${RESULTS_PATH}/${GEN_SUBSET}.codecs
+
+CUDA_VISIBLE_DEVICES=${devices[0]} python fairseq_user/eval_fid.py --results-path $IMG_SAVE_DIR 
