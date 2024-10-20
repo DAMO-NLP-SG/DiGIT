@@ -86,6 +86,26 @@ We present **DiGIT**, an auto-regressive generative model performing next-token 
 *: VAR is trained with classifier-free guidance while all the other models are not.
 
 
+## Checkpoints
+The K-Means npy file and model checkpoints can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1QWc51HhnZ2G4xI7TkKRanaqXuo8WxUSI?usp=share_link). For the base model we use [DINOv2-base](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_reg4_pretrain.pth) and [DINOv2-large](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth) for large size model. The VQGAN we use is the same as [MAGE](https://drive.google.com/file/d/13S_unB87n6KKuuMdyMnyExW0G1kplTbP/view?usp=sharing).
+
+```
+DiGIT
+└── data/
+    ├── ILSVRC2012
+        ├── dinov2_base_short_224_l3
+            ├── km_8k.npy
+        ├── dinov2_large_short_224_l3
+            ├── km_16k.npy
+└── outputs/
+    ├── base_8k_stage1
+    ├── ...
+└── models/
+    ├── vqgan_jax_strongaug.ckpt
+    ├── dinov2_vitb14_reg4_pretrain.pth
+    ├── dinov2_vitl14_reg4_pretrain.pth
+```
+
 
 ## Preparation
 
