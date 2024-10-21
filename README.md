@@ -87,7 +87,18 @@ We present **DiGIT**, an auto-regressive generative model performing next-token 
 
 
 ## Checkpoints
-The K-Means npy file and model checkpoints can be downloaded from [Google Drive](https://drive.google.com/drive/folders/1QWc51HhnZ2G4xI7TkKRanaqXuo8WxUSI?usp=share_link). For the base model we use [DINOv2-base](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_reg4_pretrain.pth) and [DINOv2-large](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth) for large size model. The VQGAN we use is the same as [MAGE](https://drive.google.com/file/d/13S_unB87n6KKuuMdyMnyExW0G1kplTbP/view?usp=sharing).
+The K-Means npy file and model checkpoints can be downloaded from: 
+
+|   Model    | Link |            
+|:----------:|:-----:|
+|  HF weights🤗    |  [Huggingface](https://huggingface.co/DAMO-NLP-SG/DiGIT) |
+|  Google Drive    |  [Google Drive](https://drive.google.com/drive/folders/1QWc51HhnZ2G4xI7TkKRanaqXuo8WxUSI?usp=share_link) |
+
+For the base model we use [DINOv2-base](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_reg4_pretrain.pth) and [DINOv2-large](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth) for large size model. The VQGAN we use is the same as [MAGE](https://drive.google.com/file/d/13S_unB87n6KKuuMdyMnyExW0G1kplTbP/view?usp=sharing).
+
+
+
+
 
 ```
 DiGIT
