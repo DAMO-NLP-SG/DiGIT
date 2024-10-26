@@ -1,4 +1,4 @@
-<h1 align="center"> Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective
+<h1 align="center"> Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective (NeurIPS 2024)
 </h1>
 
 
@@ -14,14 +14,12 @@
     <img src="assets/FID_IS.png" alt="FID IS" style="width: 600px;"> 
 </p>
 
-This is the official implementation of DiGIT accepted at NeurIPS 2024. The code will be available soon.
-
 
 ## Overview
 
 ![The overview of DiGIT](assets/digit_model.png)
 
-We present **DiGIT**, an auto-regressive generative model performing next-token prediction in an abstract latent space derived from self-supervised learning (SSL) models. By employing K-Means clustering on the hidden states of the DINOv2 model, we effectively create a novel discrete tokenizer. This method significantly boosts image generation performance on ImageNet dataset, achieving an FID score of 4.59 for class-unconditional tasks and 3.39 for class-conditional tasks. Additionally, the model enhances image understanding, attaining a linear-probe accuracy of 80.3.
+We present **DiGIT**, an auto-regressive generative model performing next-token prediction in an abstract latent space derived from self-supervised learning (SSL) models. By employing K-Means clustering on the hidden states of the DINOv2 model, we effectively create a novel discrete tokenizer. This method significantly boosts image generation performance on ImageNet dataset, achieving an FID score of **4.59 for class-unconditional tasks** and **3.39 for class-conditional tasks**. Additionally, the model enhances image understanding, achieving a **linear-probe accuracy of 80.3**.
 
 
 ## Experimental Results
