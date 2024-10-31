@@ -10,9 +10,7 @@
 </div>
 
 
-<p align="center">
-    <img src="assets/FID_IS.png" alt="FID IS" style="width: 600px;"> 
-</p>
+![FID_IS](assets/FID_IS.png)
 
 
 ## Overview
