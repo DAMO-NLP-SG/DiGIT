@@ -78,7 +78,7 @@ We present **DiGIT**, an auto-regressive generative model performing next-token 
 | MIM   | MaskGIT              | 227M     | 300      | 6.18             | 182.1          |
 | MIM   | **DiGIT (+MaskGIT)** | 219M     | 200      | **4.62**         | **146.19**     |
 | AR    | VQGAN                | 227M     | 300      | 18.65            | 80.4           |
-| AR    | **DiGIT (+VQGAN)**   | 219M     | 200      | **4.79**         | **142.87**     |
+| AR    | **DiGIT (+VQGAN)**   | 219M     | 400      | **4.79**         | **142.87**     |
 | AR    | **DiGIT (+VQGAN)**   | 732M     | 200      | **3.39**         | **205.96**     |
 
 *: VAR is trained with classifier-free guidance while all the other models are not.
@@ -90,11 +90,9 @@ The K-Means npy file and model checkpoints can be downloaded from:
 |   Model    | Link |            
 |:----------:|:-----:|
 |  HF weights🤗    |  [Huggingface](https://huggingface.co/DAMO-NLP-SG/DiGIT) |
-|  Google Drive    |  [Google Drive](https://drive.google.com/drive/folders/1QWc51HhnZ2G4xI7TkKRanaqXuo8WxUSI?usp=share_link) |
+
 
 For the base model we use [DINOv2-base](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_reg4_pretrain.pth) and [DINOv2-large](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth) for large size model. The VQGAN we use is the same as [MAGE](https://drive.google.com/file/d/13S_unB87n6KKuuMdyMnyExW0G1kplTbP/view?usp=sharing).
-
-
 
 
 
@@ -125,23 +123,14 @@ git clone https://github.com/DAMO-NLP-SG/DiGIT.git
 cd DiGIT
 ```
 
-We use the VQGAN checkpoint realsed by [MAGE](https://drive.google.com/file/d/13S_unB87n6KKuuMdyMnyExW0G1kplTbP/view?usp=sharing).
-
-Download the [DINOv2](https://github.com/facebookresearch/dinov2) SSL model.
-
 2. Install `fairseq` via `pip install fairseq`.
 
 
-### Dataset
-Download [ImageNet](http://image-net.org/) dataset, and place it in your dataset dir `$PATH_TO_YOUR_WORKSPACE/dataset/ILSVRC2012`. Prepare the ImageNet validation set for FID evaluation against validation set:
-
-```shell
-python prepare_imgnet_val.py --data_path $PATH_TO_YOUR_WORKSPACE/dataset/ILSVRC2012 --output_dir imagenet-val
-```
-To evaluate FID against the validation set, do `pip install torch-fidelity`.
+### Dataset Preparation
+Download [ImageNet](http://image-net.org/) dataset, and place it in your dataset dir `$PATH_TO_YOUR_WORKSPACE/dataset/ILSVRC2012`. 
 
 ### Tokenizer
-Extract the features of SSL and dump as the npy files. Apply K-Mneas alogrithm with [faiss](https://github.com/facebookresearch/faiss) to get the centroids.
+Extract SSL features and save them as .npy files. Use the K-Means algorithm with [faiss](https://github.com/facebookresearch/faiss) to compute the centroids. You can also utilize our pre-trained centroids available on [Huggingface](https://huggingface.co/DAMO-NLP-SG/DiGIT).
 
 ```shell
 bash preprocess/run.sh
@@ -149,29 +138,41 @@ bash preprocess/run.sh
 
 ### Training Scripts 
 
-First train a GPT model with discriminative tokenizer and you can find the training scripts in `scripts/train_stage1_ar.sh` and the hyper-params are in `config/stage1/dino_base.yaml`. You can enable class conditional generation with `scripts/train_stage1_classcond.sh`.
+**Step1**
 
-Then train a pixel decoder (either AR model or NAR model) conditioned on discriminative tokens and you can find the autoregressive training scripts in `scripts/train_stage2_ar.sh` and NAR training scripts in `scripts/train_stage2_nar.sh`.
+Train a GPT model with a discriminative tokenizer. You can find the training scripts in `scripts/train_stage1_ar.sh` and the hyper-params are in `config/stage1/dino_base.yaml`. For class conditional generation configuration, see `scripts/train_stage1_classcond.sh`.
 
-A folder named `outputs/EXP_NAME/checkpoints` will be created to save the checkpoints. The tensorboard files will be save at `outputs/EXP_NAME/tb`. The `outputs/EXP_NAME/train.log` will record logs. 
+**Step2**
 
-You can monitor the training process by using `tensorboard --logdir=outputs/EXP_NAME/tb`.
+Train a pixel decoder (either AR model or NAR model) conditioned on the discriminative tokens. You can find the autoregressive training scripts in `scripts/train_stage2_ar.sh` and NAR training scripts in `scripts/train_stage2_nar.sh`.
+
+A folder named `outputs/EXP_NAME/checkpoints` will be created to save the checkpoints. TensorBoard log files are saved at `outputs/EXP_NAME/tb`. Logs will be recorded in `outputs/EXP_NAME/train.log`. 
+
+You can monitor the training process using `tensorboard --logdir=outputs/EXP_NAME/tb`.
 
 
 ### Sampling Scripts
 
-First sampling discriminative tokens with `scripts/infer_stage1_ar.sh`. 
+First sampling discriminative tokens with `scripts/infer_stage1_ar.sh`. For the base model size, we recommend setting topk=200, and for a large model size, use topk=400.
 
-Then we sample VQ tokens conditioned on discriminative tokens sampled before with `scripts/infer_stage2_ar.sh`.
+Then run `scripts/infer_stage2_ar.sh` to sample VQ tokens based on the previously sampled discriminative tokens.
 
-A folder named `outputs/EXP_NAME/results` will be create to save the generated tokens and synthesized images.
+Generated tokens and synthesized images will be stored in a directory named `outputs/EXP_NAME/results`.
 
 ### FID and IS evaluation
+Prepare the ImageNet validation set for FID evaluation:
+```shell
+python prepare_imgnet_val.py --data_path $PATH_TO_YOUR_WORKSPACE/dataset/ILSVRC2012 --output_dir imagenet-val
+```
+
+Install the evaluation tool by running `pip install torch-fidelity`.
+
+Execute the following command to evaluate FID:
 ```shell 
 python fairseq_user/eval_fid.py --results-path $IMG_SAVE_DIR --subset $GEN_SUBSET
 ```
 
-### Linear Probe
+### Linear Probe training
 
 ```shell
 bash scripts/train_stage1_linearprobe.sh
@@ -186,13 +187,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you find our project useful, hope you can star our repo and cite our work as follows. 
 
 ```bibtex
-@misc{zhu2024stabilizelatentspaceimage,
-      title={Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective}, 
-      author={Yongxin Zhu and Bocheng Li and Hang Zhang and Xin Li and Linli Xu and Lidong Bing},
-      year={2024},
-      eprint={2410.12490},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2410.12490}, 
+@misc{zhu2024stabilize,
+    title={Stabilize the Latent Space for Image Autoregressive Modeling: A Unified Perspective},
+    author={Yongxin Zhu and Bocheng Li and Hang Zhang and Xin Li and Linli Xu and Lidong Bing},
+    year={2024},
+    eprint={2410.12490},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV}
 }
 ```
